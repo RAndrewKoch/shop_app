@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/screens/orders_screen.dart';
+import 'package:shop_app/widgets/side_drawer.dart';
 
 import '../providers/cart.dart';
 import '../widgets/badge.dart';
@@ -66,43 +67,7 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
         ],
       ),
       body: ProductsGrid(_showOnlyFavorites),
-      drawer: Drawer(
-        child: Container(
-          color: Theme.of(context).primaryColor,
-          child: Column(
-            children: [
-              SizedBox(
-                height: 30,
-              ),
-              Text('Actions'),
-              Container(
-                height: 500,
-                child: ListView(
-                  children: [
-                    TextButton(
-                      onPressed: () => Navigator.of(context)
-                          .pushReplacementNamed(OrdersScreen.routeName),
-                      child: Text(
-                        "Orders",
-                        style: TextStyle(color: Colors.black),
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () => Navigator.of(context)
-                          .pushReplacementNamed(
-                              ProductsOverviewScreen.routeName),
-                      child: Text(
-                        "Products Overview",
-                        style: TextStyle(color: Colors.black),
-                      ),
-                    )
-                  ],
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
+      drawer: SideDrawer(),
     );
   }
 }
