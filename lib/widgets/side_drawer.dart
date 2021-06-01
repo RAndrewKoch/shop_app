@@ -11,38 +11,52 @@ class SideDrawer extends StatelessWidget {
         color: Theme.of(context).backgroundColor,
         child: Column(
           children: [
-            Container(
-              decoration: BoxDecoration(color: Theme.of(context).primaryColor, border: Border(bottom: BorderSide(),),),
-              height: 100,
-              child: Center(
-                child: Text('Actions', style: TextStyle(fontSize: 40),),
-              ),
-              padding: EdgeInsets.only(top: 30),
+            AppBar(
+              leading: Container(),
+              title: Center(child: Text("Actions"),),
+              automaticallyImplyLeading: false,
+              actions: [
+                BackButton(),
+              ],
             ),
+            Divider(),
+
+            // Container(
+            //   decoration: BoxDecoration(color: Theme.of(context).primaryColor, border: Border(bottom: BorderSide(),),),
+            //   height: 100,
+            //   child: Center(
+            //     child: Text('Actions', style: TextStyle(fontSize: 40),),
+            //   ),
+            //   padding: EdgeInsets.only(top: 30),
+            // ),
             Container(
-              height: 400,
+              margin: EdgeInsets.symmetric(vertical: 0),
+              padding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+              height: MediaQuery.of(context).size.height * .8,
               child: ListView(
+                padding: EdgeInsets.all(0),
                 children: [
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.blue,
-                    ),
-                    onPressed: () => Navigator.of(context)
-                        .pushReplacementNamed(OrdersScreen.routeName),
-                    child: Text(
-                      "Orders",
-                      style: TextStyle(color: Colors.black),
+                  Card(
+                    elevation: 5,
+                    child: ListTile(
+                      leading: Icon(Icons.shop),
+                      onTap: () => Navigator.of(context)
+                          .pushReplacementNamed(OrdersScreen.routeName),
+                      title: Text(
+                        "Orders",
+                      ),
                     ),
                   ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.blue,
-                    ),
-                    onPressed: () => Navigator.of(context)
-                        .pushReplacementNamed(ProductsOverviewScreen.routeName),
-                    child: Text(
-                      "Products Overview",
-                      style: TextStyle(color: Colors.black),
+                  Card(
+                    elevation: 5,
+                    child: ListTile(
+                      leading: Icon(Icons.payment),
+                      onTap: () => Navigator.of(context)
+                          .pushReplacementNamed(ProductsOverviewScreen.routeName),
+                      title: Text(
+                        "Products Overview",
+                        style: TextStyle(color: Colors.black),
+                      ),
                     ),
                   )
                 ],
