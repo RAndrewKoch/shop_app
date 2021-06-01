@@ -17,10 +17,37 @@ class CartItemDisplay extends StatelessWidget {
     final Cart cart = Provider.of<Cart>(context, listen: false);
 
     return Dismissible(
+      confirmDismiss: (direction) {
+        return showDialog(
+          context: context,
+          builder: (context) =>
+              AlertDialog(
+                title: Text(
+                    'Are you sure you wish to delete ${cartItem.title}?'),
+                content: Text("This action cannot be undone"),
+                actions: [
+                  TextButton(
+                    child: Text("No"),
+                    onPressed: () {
+                      Navigator.of(context).pop(false);
+                    },
+                  ),
+                  TextButton(
+                    child: Text("Yes"),
+                    onPressed: () {
+                      Navigator.of(context).pop(true);
+                    },
+                  ),
+                ],
+              ),
+        );
+      },
       direction: DismissDirection.endToStart,
       key: ValueKey(cartItem.id),
       background: Container(
-        color: Theme.of(context).errorColor,
+        color: Theme
+            .of(context)
+            .errorColor,
         child: Icon(
           Icons.delete,
           color: Colors.white,
@@ -50,7 +77,7 @@ class CartItemDisplay extends StatelessWidget {
               ),
             ),
             title: Text(cartItem.title),
-            subtitle: Text('Total: \$${(cartItem.price * cartItem.quantity)}'),
+            subtitle: Text('Total: \$${(cartItem.price * cartItem.quantity).toStringAsFixed(2)}'),
             trailing: Text('${cartItem.quantity} x'),
           ),
         ),
