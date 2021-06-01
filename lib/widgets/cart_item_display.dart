@@ -20,34 +20,36 @@ class CartItemDisplay extends StatelessWidget {
       confirmDismiss: (direction) {
         return showDialog(
           context: context,
-          builder: (context) =>
-              AlertDialog(
-                title: Text(
-                    'Are you sure you wish to delete ${cartItem.title}?'),
-                content: Text("This action cannot be undone"),
-                actions: [
-                  TextButton(
-                    child: Text("No"),
-                    onPressed: () {
-                      Navigator.of(context).pop(false);
-                    },
-                  ),
-                  TextButton(
-                    child: Text("Yes"),
-                    onPressed: () {
-                      Navigator.of(context).pop(true);
-                    },
-                  ),
-                ],
+          builder: (context) => AlertDialog(
+            title: Text('Are you sure you wish to delete ${cartItem.title}?'),
+            content: Text("This action cannot be undone"),
+            actions: [
+              TextButton(
+                child: Text(
+                  "Yes",
+                  style: TextStyle(color: Colors.black),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop(true);
+                },
               ),
+              TextButton(
+                child: Text(
+                  "No",
+                  style: TextStyle(color: Colors.black),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop(false);
+                },
+              ),
+            ],
+          ),
         );
       },
       direction: DismissDirection.endToStart,
       key: ValueKey(cartItem.id),
       background: Container(
-        color: Theme
-            .of(context)
-            .errorColor,
+        color: Theme.of(context).errorColor,
         child: Icon(
           Icons.delete,
           color: Colors.white,
@@ -77,7 +79,8 @@ class CartItemDisplay extends StatelessWidget {
               ),
             ),
             title: Text(cartItem.title),
-            subtitle: Text('Total: \$${(cartItem.price * cartItem.quantity).toStringAsFixed(2)}'),
+            subtitle: Text(
+                'Total: \$${(cartItem.price * cartItem.quantity).toStringAsFixed(2)}'),
             trailing: Text('${cartItem.quantity} x'),
           ),
         ),

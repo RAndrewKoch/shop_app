@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shop_app/screens/product_entry_screen.dart';
 
 import '../screens/orders_screen.dart';
 import '../screens/products_overview_screen.dart';
@@ -21,14 +22,6 @@ class SideDrawer extends StatelessWidget {
             ),
             Divider(),
 
-            // Container(
-            //   decoration: BoxDecoration(color: Theme.of(context).primaryColor, border: Border(bottom: BorderSide(),),),
-            //   height: 100,
-            //   child: Center(
-            //     child: Text('Actions', style: TextStyle(fontSize: 40),),
-            //   ),
-            //   padding: EdgeInsets.only(top: 30),
-            // ),
             Container(
               margin: EdgeInsets.symmetric(vertical: 0),
               padding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
@@ -58,7 +51,19 @@ class SideDrawer extends StatelessWidget {
                         style: TextStyle(color: Colors.black),
                       ),
                     ),
-                  )
+                  ),
+                  Card(
+                    elevation: 5,
+                    child: ListTile(
+                      leading: Icon(Icons.add_business),
+                      onTap: () => Navigator.of(context)
+                          .pushReplacementNamed(ProductEntry.routeName),
+                      title: Text(
+                        "Products Entry",
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             )
