@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 import '../providers/product.dart';
@@ -11,23 +10,27 @@ class EditProductScreen extends StatefulWidget {
 }
 
 class _EditProductScreenState extends State<EditProductScreen> {
-
-
   @override
   Widget build(BuildContext context) {
     Product? editingProduct;
-    if (ModalRoute.of(context)!.settings.arguments!=null) {
-      editingProduct = ModalRoute
-          .of(context)!
-          .settings
-          .arguments as Product;
+    if (ModalRoute.of(context)!.settings.arguments != null) {
+      editingProduct = ModalRoute.of(context)!.settings.arguments as Product;
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Edit Product'),
+        title: Text(editingProduct!=null? "Editing ${editingProduct.title}" : "New Product"),
       ),
-      body: Text(editingProduct != null? editingProduct.title:"New Item"),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          child: ListView(
+            children: [
+              TextFormField(decoration: InputDecoration(labelText: "Title"), textInputAction: TextInputAction.next, initialValue: editingProduct!=null?editingProduct.title:null,),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

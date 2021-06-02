@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/screens/edit_product_screen.dart';
 
 
 
@@ -21,7 +22,7 @@ class ProductEntry extends StatelessWidget {
         actions: [
           IconButton(
             icon: Icon(Icons.add),
-            onPressed: () {},
+            onPressed: () {Navigator.pushNamed(context, EditProductScreen.routeName);},
           ),
         ],
       ),
