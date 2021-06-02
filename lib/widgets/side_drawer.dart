@@ -13,6 +13,7 @@ class SideDrawer extends StatelessWidget {
         child: Column(
           children: [
             AppBar(
+              toolbarHeight: MediaQuery.of(context).size.height*.10,
               leading: Container(),
               title: Center(child: Text("Actions"),),
               automaticallyImplyLeading: false,

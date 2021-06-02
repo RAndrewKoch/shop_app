@@ -57,4 +57,9 @@ class Products with ChangeNotifier{
     // _items.add(value);
     notifyListeners();
   }
+
+  void removeProduct (Product product){
+      _items.remove(product);
+      notifyListeners();
+  }
 }
