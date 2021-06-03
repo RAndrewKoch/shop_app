@@ -20,7 +20,7 @@ class ProductDetailScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(loadedProduct.title),
+        title: Text(loadedProduct.title!),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -34,24 +34,24 @@ class ProductDetailScreen extends StatelessWidget {
               width: double.infinity,
               height: 300,
               child: Image.network(
-                loadedProduct.imageUrl,
+                loadedProduct.imageUrl!,
                 fit: BoxFit.fitWidth,
               ),
             ),
             SizedBox(height: 10),
-            Text('\$${loadedProduct.price.toStringAsFixed(2)}',
+            Text('\$${loadedProduct.price!.toStringAsFixed(2)}',
               style: TextStyle(fontSize: 40),),
             SizedBox(height: 10),
             Text(
-              loadedProduct.title,
+              loadedProduct.title!,
               style: TextStyle(fontSize: 20),
             ),
             SizedBox(height: 10),
-            Text(loadedProduct.description, softWrap: true,),
+            Text(loadedProduct.description!, softWrap: true,),
             SizedBox(height: 10),
             ElevatedButton(
               onPressed: () {
-                cart.addItem(loadedProduct.id, loadedProduct.price, loadedProduct.title);
+                cart.addItem(loadedProduct.id!, loadedProduct.price!, loadedProduct.title!);
                 Navigator.of(context).pop();
               },
               child: Text("Add one to cart"),

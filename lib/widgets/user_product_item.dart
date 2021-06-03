@@ -21,12 +21,12 @@ class UserProductItem extends StatelessWidget {
         leading: Container(
           width: MediaQuery.of(context).size.width * .15,
           child: CircleAvatar(
-            backgroundImage: NetworkImage(product.imageUrl),
+            backgroundImage: NetworkImage(product.imageUrl!),
           ),
         ),
-        title: Text("${product.id}-${product.title}"),
+        title: Text("${product.title}"),
         subtitle: Text(
-            "${product.description}-\$${product.price.toStringAsFixed(2)}"),
+            "${product.description}-\$${product.price!.toStringAsFixed(2)}"),
         trailing: Container(
           width: MediaQuery.of(context).size.width * .25,
           child: Row(
