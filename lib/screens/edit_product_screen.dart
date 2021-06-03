@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/providers/products.dart';
 
@@ -17,11 +18,24 @@ class _EditProductScreenState extends State<EditProductScreen> {
   final _urlFocusNode = FocusNode();
   final GlobalKey<FormState> _form = GlobalKey<FormState>();
   Product editingProduct = Product(id: "", title: "", description: "", price: 0, imageUrl: "",);
+  var _isInit = true;
 
   @override
   void initState() {
     _urlFocusNode.addListener(updateImageUrl);
     super.initState();
+  }
+
+  void didChangeDependencies(){
+    if (_isInit){
+      final passedProduct= ModalRoute.of(context)!.settings.arguments as Product?;
+      if (passedProduct!=null) {
+        editingProduct = passedProduct;
+        _urlController.text=editingProduct.imageUrl!;
+      }
+    }
+    _isInit = false;
+    super.didChangeDependencies();
   }
 
   void dispose() {
@@ -45,8 +59,13 @@ class _EditProductScreenState extends State<EditProductScreen> {
     final isValid = _form.currentState!.validate();
     if (isValid) {
       _form.currentState!.save();
-      print(editingProduct.title);
-      Provider.of<Products>(context, listen: false).addProduct(editingProduct);
+      if (editingProduct.id!.isEmpty) {
+        Provider.of<Products>(context, listen: false).addProduct(
+            editingProduct);
+        Navigator.of(context).pop();
+        return;
+      }
+      Provider.of<Products>(context, listen: false).updateProduct(editingProduct);
       Navigator.of(context).pop();
     }
   }
@@ -91,6 +110,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                     id: editingProduct.id,
                     description: editingProduct.description,
                     imageUrl: editingProduct.imageUrl,
+                    isFavorite: editingProduct.isFavorite,
                   );
                 },
               ),
@@ -117,6 +137,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                     id: editingProduct.id,
                     description: editingProduct.description,
                     imageUrl: editingProduct.imageUrl,
+                    isFavorite: editingProduct.isFavorite,
                   );
                 },
               ),
@@ -139,6 +160,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
                     id: editingProduct.id,
                     description: value,
                     imageUrl: editingProduct.imageUrl,
+                    isFavorite: editingProduct.isFavorite,
+
                   );
                 },
               ),
@@ -196,6 +219,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
                           id: editingProduct.id,
                           description: editingProduct.description,
                           imageUrl: value,
+                          isFavorite: editingProduct.isFavorite,
+
                         );
                       },
                     ),
