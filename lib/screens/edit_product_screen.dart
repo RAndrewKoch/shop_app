@@ -19,6 +19,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
   final GlobalKey<FormState> _form = GlobalKey<FormState>();
   Product editingProduct = Product(id: "", title: "", description: "", price: 0, imageUrl: "",);
   var _isInit = true;
+  var _isLoading = false;
 
   @override
   void initState() {
@@ -48,7 +49,6 @@ class _EditProductScreenState extends State<EditProductScreen> {
 
   void updateImageUrl() {
     if (!_urlFocusNode.hasFocus) {
-      print ("update url fired");
       setState(() {
 
       });
@@ -59,14 +59,25 @@ class _EditProductScreenState extends State<EditProductScreen> {
     final isValid = _form.currentState!.validate();
     if (isValid) {
       _form.currentState!.save();
+      setState(() {
+        _isLoading = true;
+      });
       if (editingProduct.id!.isEmpty) {
         Provider.of<Products>(context, listen: false).addProduct(
+            editingProduct).then((_){
+          setState(() {
+            _isLoading = false;
+          });
+          Navigator.of(context).pop();
+        });
+      } else {
+        Provider.of<Products>(context, listen: false).updateProduct(
             editingProduct);
+        setState(() {
+          _isLoading = false;
+        });
         Navigator.of(context).pop();
-        return;
       }
-      Provider.of<Products>(context, listen: false).updateProduct(editingProduct);
-      Navigator.of(context).pop();
     }
   }
 
@@ -84,7 +95,10 @@ class _EditProductScreenState extends State<EditProductScreen> {
           ),
         ],
       ),
-      body: Padding(
+      body: _isLoading? Center(
+        child:CircularProgressIndicator(),
+      ):
+      Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _form,
