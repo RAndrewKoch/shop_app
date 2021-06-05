@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
+import 'package:http/http.dart' as http;
 
 import './cart.dart';
 
@@ -23,12 +26,70 @@ class Orders with ChangeNotifier {
     return [..._orders];
   }
 
-  void addOrder(List<CartItem> cartProducts, double total) {
-    _orders.insert(0, OrderItem(id: DateTime.now().toString(),
+  Future<void> addOrder(List<CartItem> cartProducts, double total) async {
+    final url = Uri.parse(
+        "https://flutter-shop-app-110f1-default-rtdb.firebaseio.com/orders.json");
+    final dateTime = DateTime.now();
+    final response = await http.post(
+      url,
+      body: json.encode({
+        "total": total,
+        "dateTime": dateTime.toIso8601String(),
+        "cartProducts": cartProducts
+            .map((item) => {
+                  "id": item.id,
+                  "title": item.title,
+                  "quantity": item.quantity,
+                  "price": item.price,
+                })
+            .toList(),
+      }),
+    );
+    _orders.insert(
+      0,
+      OrderItem(
+        id: json.decode(response.body)["name"],
         amount: total,
         products: cartProducts,
-        dateTime: DateTime.now()));
+        dateTime: dateTime,
+      ),
+    );
     notifyListeners();
   }
 
+  Future<void> fetchOrders() async {
+    final url = Uri.parse(
+        "https://flutter-shop-app-110f1-default-rtdb.firebaseio.com/orders.json");
+
+    final response = await http.get(url);
+    Map<String,dynamic>? retrievedOrders = json.decode(response.body) as Map<String, dynamic>?;
+    print(retrievedOrders);
+    if (retrievedOrders==null){
+      return;
+    }
+    List<OrderItem> orders = [];
+    retrievedOrders.forEach((key, value) {
+      print(key);
+      print(value);
+      orders.add(OrderItem(
+        id: key,
+        amount: value["total"],
+        dateTime: DateTime.parse(value["dateTime"]),
+        products: (value["cartProducts"] as List<dynamic>)
+            .map(
+              (item) => CartItem(
+                id: item["id"],
+                price: item["price"],
+                quantity: item["quantity"],
+                title: item["title"],
+              ),
+            )
+            .toList(),
+      ));
+    });
+
+    _orders = orders.reversed.toList();
+
+    notifyListeners();
+  }
 }

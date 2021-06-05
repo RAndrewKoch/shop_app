@@ -2,12 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/screens/edit_product_screen.dart';
 
-
-
-import '../widgets/side_drawer.dart';
 import '../providers/products.dart';
+import '../widgets/side_drawer.dart';
 import '../widgets/user_product_item.dart';
-
 
 class ProductEntry extends StatelessWidget {
   static const String routeName = "/productEntry";
@@ -26,18 +23,27 @@ class ProductEntry extends StatelessWidget {
         actions: [
           IconButton(
             icon: Icon(Icons.add),
-            onPressed: () {Navigator.pushNamed(context, EditProductScreen.routeName);},
+            onPressed: () {
+              Navigator.pushNamed(context, EditProductScreen.routeName);
+            },
           ),
         ],
       ),
-      body: RefreshIndicator(
-        onRefresh: () => _refreshProducts(context),
-        child: Padding(padding: EdgeInsets.all(8),
-          child: ListView.builder(
-            itemBuilder: ((context, i) =>
-                UserProductItem(product: productsData.items[i])),
-            itemCount: productsData.items.length,),),
-      ),
+      body: productsData.items.length == 0
+          ? Center(
+              child: Text("You have not yet entered any products!"),
+            )
+          : RefreshIndicator(
+              onRefresh: () => _refreshProducts(context),
+              child: Padding(
+                padding: EdgeInsets.all(8),
+                child: ListView.builder(
+                  itemBuilder: ((context, i) =>
+                      UserProductItem(product: productsData.items[i])),
+                  itemCount: productsData.items.length,
+                ),
+              ),
+            ),
       drawer: SideDrawer(),
     );
   }

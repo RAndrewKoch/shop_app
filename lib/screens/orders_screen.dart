@@ -5,8 +5,29 @@ import 'package:shop_app/widgets/side_drawer.dart';
 import '../providers/orders.dart';
 import '../widgets/order_item_display.dart';
 
-class OrdersScreen extends StatelessWidget {
+class OrdersScreen extends StatefulWidget {
   static const String routeName = "/orders";
+
+  @override
+  _OrdersScreenState createState() => _OrdersScreenState();
+}
+
+class _OrdersScreenState extends State<OrdersScreen> {
+  var _isLoadingOrders = false;
+
+  @override
+  void initState() {
+    Future.delayed(Duration.zero).then((_) async {
+      setState(() {
+        _isLoadingOrders = true;
+      });
+      await Provider.of<Orders>(context, listen: false).fetchOrders();
+      setState(() {
+        _isLoadingOrders = false;
+      });
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,15 +37,19 @@ class OrdersScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text("Your Orders"),
       ),
-      body: orderData.orders.length == 0
+      body: _isLoadingOrders
           ? Center(
-              child: Text("Sorry, no orders have been sent!"),
+              child: CircularProgressIndicator(),
             )
-          : ListView.builder(
-              itemCount: orderData.orders.length,
-              itemBuilder: ((context, i) =>
-                  OrderItemDisplay(orderItem: orderData.orders[i])),
-            ),
+          : orderData.orders.length == 0
+              ? Center(
+                  child: Text("Sorry, no orders have been sent!"),
+                )
+              : ListView.builder(
+                  itemCount: orderData.orders.length,
+                  itemBuilder: ((context, i) =>
+                      OrderItemDisplay(orderItem: orderData.orders[i])),
+                ),
       drawer: SideDrawer(),
     );
   }

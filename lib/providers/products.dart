@@ -57,10 +57,14 @@ class Products with ChangeNotifier {
   Future<void> fetchAndSetProducts() async {
     final url = Uri.parse(
         "https://flutter-shop-app-110f1-default-rtdb.firebaseio.com/products.json");
+
     try {
       final response = await http.get(url);
-      final extractedData = json.decode(response.body) as Map<String, dynamic>;
+      final extractedData = json.decode(response.body) as Map<String, dynamic>?;
       final List<Product> loadedProducts = [];
+      if (extractedData==null){
+        return;
+      }
       extractedData.forEach((productId, value) {
         loadedProducts.add(
           Product(
