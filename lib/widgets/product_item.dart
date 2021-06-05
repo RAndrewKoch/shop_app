@@ -9,6 +9,7 @@ import '../screens/product_detail_screen.dart';
 class ProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final scaffold = ScaffoldMessenger.of(context);
     final Product product = Provider.of<Product>(context);
     final Cart cart = Provider.of<Cart>(context);
     return ClipRRect(
@@ -25,7 +26,15 @@ class ProductItem extends StatelessWidget {
         footer: GridTileBar(
           backgroundColor: Theme.of(context).accentColor.withOpacity(.75),
           leading: IconButton(
-            onPressed: () => product.toggleFavoriteStatus(),
+            onPressed: () => product.toggleFavoriteStatus().catchError((error) {
+              scaffold.removeCurrentSnackBar();
+              scaffold.showSnackBar(
+                SnackBar(duration: Duration(seconds: 2),
+                  content: Text(
+                      "Cannot update favorites, check internet connection"),
+                ),
+              );
+            }),
             icon: product.isFavorite
                 ? Icon(
                     Icons.favorite,

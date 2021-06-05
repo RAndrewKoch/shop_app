@@ -14,6 +14,7 @@ class UserProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final productsList = Provider.of<Products>(context);
+    final scaffold = ScaffoldMessenger.of(context);
 
     return Card(
       clipBehavior: Clip.hardEdge,
@@ -33,44 +34,51 @@ class UserProductItem extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               IconButton(
-                onPressed: () {Navigator.pushNamed(context, EditProductScreen.routeName, arguments: product);},
+                onPressed: () {
+                  Navigator.pushNamed(context, EditProductScreen.routeName,
+                      arguments: product);
+                },
                 icon: Icon(Icons.edit),
               ),
               IconButton(
+                icon: Icon(Icons.delete),
+                color: Theme.of(context).errorColor,
                 onPressed: () {
                   showDialog(
                     context: context,
-                    builder: (BuildContext context) => AlertDialog(
+                    builder: (BuildContext ctx) => AlertDialog(
                       title: Text("Are you sure?"),
                       content: Text(
-                          "Product will be removed from your listings, but will not remove any previously ordered units of this item from alredy sent orders."),
+                          "Product will be removed from your listings, but will not remove any previously ordered units of this item from already sent orders."),
                       actions: [
                         TextButton(
                           child: Text(
                             "Yes",
                             style: TextStyle(color: Colors.black),
                           ),
-                          onPressed: () => Navigator.of(context).pop(true),
+                          onPressed: () => Navigator.of(ctx).pop(true),
                         ),
                         TextButton(
                           child: Text(
                             "No",
                             style: TextStyle(color: Colors.black),
                           ),
-                          onPressed: () => Navigator.of(context).pop(false),
+                          onPressed: () => Navigator.of(ctx).pop(false),
                         ),
                       ],
                     ),
-                  ).then((result) {
-                    if (result) {
-                      productsList.removeProduct(product);
-                    } else {
-                      return;
-                    }
-                  });
+                  ).then(
+                    (result) async {
+                      if (result) {
+                        try {
+                         await Provider.of<Products>(context, listen: false).removeProduct(product, context);
+                        } catch (error) {
+                          scaffold.showSnackBar(SnackBar(content: Text('Deleting failed!'),),);
+                        }
+                      }
+                    },
+                  );
                 },
-                icon: Icon(Icons.delete),
-                color: Theme.of(context).errorColor,
               ),
             ],
           ),
