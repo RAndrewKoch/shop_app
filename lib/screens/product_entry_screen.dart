@@ -10,14 +10,16 @@ class ProductEntry extends StatelessWidget {
   static const String routeName = "/productEntry";
 
   Future<void> _refreshProducts(BuildContext context) async {
-    await Provider.of<Products>(context, listen: false).fetchAndSetProducts();
+    await Provider.of<Products>(context, listen: false)
+        .fetchAndSetProducts(true);
   }
 
   @override
   Widget build(BuildContext context) {
-    final productsData = Provider.of<Products>(context);
-
+    // final productsData = Provider.of<Products>(context);
+    print("rebuilding");
     return Scaffold(
+
       appBar: AppBar(
         title: Text("Product Entry"),
         actions: [
@@ -29,21 +31,33 @@ class ProductEntry extends StatelessWidget {
           ),
         ],
       ),
-      body: productsData.items.length == 0
-          ? Center(
-              child: Text("You have not yet entered any products!"),
-            )
-          : RefreshIndicator(
-              onRefresh: () => _refreshProducts(context),
-              child: Padding(
-                padding: EdgeInsets.all(8),
-                child: ListView.builder(
-                  itemBuilder: ((context, i) =>
-                      UserProductItem(product: productsData.items[i])),
-                  itemCount: productsData.items.length,
-                ),
+      body: FutureBuilder(
+        future: _refreshProducts(context),
+        builder: (context, snapshot) => snapshot.connectionState ==
+                ConnectionState.waiting
+            ? Center(
+                child: CircularProgressIndicator(),
+              )
+            : Consumer<Products>(
+                builder: (context, productsData, _) =>
+                    productsData.items.length == 0
+                        ? Center(
+                            child:
+                                Text("You have not yet entered any products!"),
+                          )
+                        : RefreshIndicator(
+                            onRefresh: () => _refreshProducts(context),
+                            child: Padding(
+                              padding: EdgeInsets.all(8),
+                              child: ListView.builder(
+                                itemBuilder: ((context, i) => UserProductItem(
+                                    product: productsData.items[i])),
+                                itemCount: productsData.items.length,
+                              ),
+                            ),
+                          ),
               ),
-            ),
+      ),
       drawer: SideDrawer(),
     );
   }

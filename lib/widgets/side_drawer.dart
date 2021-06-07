@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shop_app/providers/auth.dart';
 import 'package:shop_app/screens/product_entry_screen.dart';
 
 import '../screens/orders_screen.dart';
@@ -61,6 +63,19 @@ class SideDrawer extends StatelessWidget {
                           .pushReplacementNamed(ProductEntry.routeName),
                       title: Text(
                         "Products Entry",
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ),
+                  ),
+                  Card(
+                    elevation: 5,
+                    child: ListTile(
+                      leading: Icon(Icons.logout),
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        Provider.of<Auth>(context, listen:false,).logout(context);},
+                      title: Text(
+                        "Logout",
                         style: TextStyle(color: Colors.black),
                       ),
                     ),

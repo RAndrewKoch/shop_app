@@ -2,9 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+
 import '../providers/cart.dart';
 import '../providers/product.dart';
 import '../screens/product_detail_screen.dart';
+import '../providers/auth.dart';
 
 class ProductItem extends StatelessWidget {
   @override
@@ -12,6 +14,8 @@ class ProductItem extends StatelessWidget {
     final scaffold = ScaffoldMessenger.of(context);
     final Product product = Provider.of<Product>(context);
     final Cart cart = Provider.of<Cart>(context);
+    final String? authToken = Provider.of<Auth>(context).token;
+    final String? userId = Provider.of<Auth>(context, listen: false).userId;
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: GridTile(
@@ -26,7 +30,7 @@ class ProductItem extends StatelessWidget {
         footer: GridTileBar(
           backgroundColor: Theme.of(context).accentColor.withOpacity(.75),
           leading: IconButton(
-            onPressed: () => product.toggleFavoriteStatus().catchError((error) {
+            onPressed: () => product.toggleFavoriteStatus(authToken!, userId).catchError((error) {
               scaffold.removeCurrentSnackBar();
               scaffold.showSnackBar(
                 SnackBar(duration: Duration(seconds: 2),
