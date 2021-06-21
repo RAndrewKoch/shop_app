@@ -5,6 +5,7 @@ import 'package:shop_app/screens/product_entry_screen.dart';
 
 import '../screens/orders_screen.dart';
 import '../screens/products_overview_screen.dart';
+import '../helpers/custom_route.dart';
 
 class SideDrawer extends StatelessWidget {
   @override
@@ -15,16 +16,17 @@ class SideDrawer extends StatelessWidget {
         child: Column(
           children: [
             AppBar(
-              toolbarHeight: MediaQuery.of(context).size.height*.10,
+              toolbarHeight: MediaQuery.of(context).size.height * .10,
               leading: Container(),
-              title: Center(child: Text("Actions"),),
+              title: Center(
+                child: Text("Actions"),
+              ),
               automaticallyImplyLeading: false,
               actions: [
                 BackButton(),
               ],
             ),
             Divider(),
-
             Container(
               margin: EdgeInsets.symmetric(vertical: 0),
               padding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
@@ -36,8 +38,11 @@ class SideDrawer extends StatelessWidget {
                     elevation: 5,
                     child: ListTile(
                       leading: Icon(Icons.shop),
-                      onTap: () => Navigator.of(context)
-                          .pushReplacementNamed(OrdersScreen.routeName),
+                      onTap: () => {
+                        // Navigator.of(context)
+                        //     .pushReplacementNamed(OrdersScreen.routeName)
+                        Navigator.of(context).pushReplacement(CustomRoute(builder: (ctx) => OrdersScreen(),),),
+                      },
                       title: Text(
                         "Orders",
                       ),
@@ -47,8 +52,8 @@ class SideDrawer extends StatelessWidget {
                     elevation: 5,
                     child: ListTile(
                       leading: Icon(Icons.payment),
-                      onTap: () => Navigator.of(context)
-                          .pushReplacementNamed(ProductsOverviewScreen.routeName),
+                      onTap: () => Navigator.of(context).pushReplacementNamed(
+                          ProductsOverviewScreen.routeName),
                       title: Text(
                         "Products Overview",
                         style: TextStyle(color: Colors.black),
@@ -73,7 +78,11 @@ class SideDrawer extends StatelessWidget {
                       leading: Icon(Icons.logout),
                       onTap: () {
                         Navigator.of(context).pop();
-                        Provider.of<Auth>(context, listen:false,).logout(context);},
+                        Provider.of<Auth>(
+                          context,
+                          listen: false,
+                        ).logout();
+                      },
                       title: Text(
                         "Logout",
                         style: TextStyle(color: Colors.black),

@@ -2,11 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-
+import '../providers/auth.dart';
 import '../providers/cart.dart';
 import '../providers/product.dart';
 import '../screens/product_detail_screen.dart';
-import '../providers/auth.dart';
 
 class ProductItem extends StatelessWidget {
   @override
@@ -22,18 +21,25 @@ class ProductItem extends StatelessWidget {
         child: GestureDetector(
           onTap: () => Navigator.of(context)
               .pushNamed(ProductDetailScreen.routeName, arguments: product.id),
-          child: Image.network(
-            product.imageUrl!,
-            fit: BoxFit.cover,
+          child: Hero(
+            tag: product.id!,
+            child: FadeInImage(
+              placeholder: AssetImage('assets/images/product-placeholder.png'),
+              image: NetworkImage(product.imageUrl!),
+              fit: BoxFit.cover,
+            ),
           ),
         ),
         footer: GridTileBar(
           backgroundColor: Theme.of(context).accentColor.withOpacity(.75),
           leading: IconButton(
-            onPressed: () => product.toggleFavoriteStatus(authToken!, userId).catchError((error) {
+            onPressed: () => product
+                .toggleFavoriteStatus(authToken!, userId)
+                .catchError((error) {
               scaffold.removeCurrentSnackBar();
               scaffold.showSnackBar(
-                SnackBar(duration: Duration(seconds: 2),
+                SnackBar(
+                  duration: Duration(seconds: 2),
                   content: Text(
                       "Cannot update favorites, check internet connection"),
                 ),
